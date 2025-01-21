@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/TKsignup/static/css/main.e6c13ad2.css",
+    "main.js": "/TKsignup/static/js/main.0edb403a.js",
+    "static/js/952.9e8c73d7.chunk.js": "/TKsignup/static/js/952.9e8c73d7.chunk.js",
+    "static/js/488.e75445ad.chunk.js": "/TKsignup/static/js/488.e75445ad.chunk.js",
+    "index.html": "/TKsignup/index.html",
+    "main.e6c13ad2.css.map": "/TKsignup/static/css/main.e6c13ad2.css.map",
+    "main.0edb403a.js.map": "/TKsignup/static/js/main.0edb403a.js.map",
+    "952.9e8c73d7.chunk.js.map": "/TKsignup/static/js/952.9e8c73d7.chunk.js.map",
+    "488.e75445ad.chunk.js.map": "/TKsignup/static/js/488.e75445ad.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.0edb403a.js"
+  ]
+}
