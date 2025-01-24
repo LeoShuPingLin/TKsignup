@@ -54,8 +54,7 @@ const App = () => {
       const { data, error } = await supabase
         .from("MemberData")
         .select("member") // 查詢所有 member
-        .eq("group", groupNo)// 過濾條件：根據團別
-        .eq("status", "Y"); // 新增條件：status = 'Y'; 
+        .eq("group", groupNo); // 過濾條件：根據團別
 
       if (error) throw error;
 
@@ -74,12 +73,12 @@ const App = () => {
     try {
       const { data, error } = await supabase
         .from("MemberData")
-        .select("id, group, member, character")
+        .select("id, character")
         .eq("member", member); // 根據成員過濾
       if (error) throw error;
 
       // 設定表格數據，每行顯示角色
-      setTableData(data.map((row) => ({ id: row.id, group: row.group, member: row.member, character: row.character })));
+      setTableData(data.map((row) => ({ id: row.id, character: row.character })));
     } catch (error) {
       console.error("Error fetching characters: ", error);
     }
@@ -97,15 +96,9 @@ const App = () => {
       title: "角色",
       dataIndex: "character",
       key: "character",
-      render: (value, record, index) =>
-        record.isEditable ? (
-          <Input
-            value={value}
-            onChange={(e) => handleTableChange(e.target.value, index, "character")}
-          />
-        ) : (
-          <span>{value}</span> // 唯讀模式顯示文字
-        ),
+      render: (value) => (
+        <span>{value}</span> // 將角色設為唯讀，只顯示文字
+      ),
     },
     {
       title: "參戰狀態",
@@ -161,10 +154,7 @@ const App = () => {
 
   // 新增一行表格
   const handleAddRow = () => {
-    setTableData([
-      ...tableData,
-      { id: Date.now(), character: "", isEditable: true }, // 新增行默認可編輯
-    ]);
+    setTableData([...tableData, { character: "" }]);
   };
 
   // 團別變更處理
@@ -196,43 +186,6 @@ const App = () => {
   // 取消同步
   const handleCancelSync = () => {
     setIsModalVisible(false); // 僅關閉提示框
-  };
-
-  const handleConfirm = async () => {
-    // 檢查是否所有行的狀態都已填寫
-    const incompleteRow = tableData.find((row) => !row.status);
-    if (incompleteRow) {
-      alert("請確認所有角色的參戰狀態都已選擇！");
-      return;
-    }
-
-    console.log('test2:', tableData);
-
-    // 構造要插入 Supabase 的數據
-    const rowsToInsert = tableData.map((row) => ({
-      group: row.group, // 替換為實際的團別
-      type: row.status,
-      member: row.member, // 替換為實際的成員名稱
-      character: row.character,
-      status:'I'
-    }));
-
-    // 插入到 Supabase
-    try {
-      const { data, error } = await supabase.from("RowData").insert(rowsToInsert);
-
-      if (error) {
-        console.error("Error inserting data:", error);
-        alert("報名失敗，請稍後再試！");
-        return;
-      }
-
-      alert("報名成功！");
-      setTableData([]); // 清空表格
-    } catch (err) {
-      console.error("Unexpected error:", err);
-      alert("報名失敗，請稍後再試！");
-    }
   };
 
   return (
@@ -296,21 +249,12 @@ const App = () => {
             pagination={false}
             bordered
           />
-          {/* 發現會沒有該角色的對應，會有問題 先註解
           <Button
             type="dashed"
             onClick={handleAddRow}
             style={{ marginTop: 16, width: "100%" }}
           >
             新增角色
-          </Button>
-          */}
-          <Button
-            type="primary"
-            onClick={handleConfirm}
-            style={{ marginTop: 16, width: "100%" }}
-          >
-            報名
           </Button>
         </>
       )}
